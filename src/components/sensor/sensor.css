@@ -1,0 +1,50 @@
+.sensor {
+    min-width: 25%;
+    height: 30vh;
+    float: left;
+}
+
+h2 {
+    color: white;
+    text-align: center;
+    font-size: 3.5em;
+    padding-bottom: 0.1em;
+    width: 100%;
+    -webkit-transition-property: color, background-color;
+    -webkit-transition-duration: 0.75s;
+    -webkit-transition-timing-function: ease;
+    transition-property: color, background-color;
+    transition-duration: 0.75s;
+    transition-timing-function: ease;
+}
+
+h2.dark {
+    background-color: #282828;
+}
+
+h2.light {
+    background-color: #DBDBDB;
+    color: #282828;
+}
+
+h1 {
+    color: white;
+    text-align: center;
+    font-size: 10em;
+    -webkit-transition-property: color, background-color;
+    -webkit-transition-duration: 0.75s;
+    -webkit-transition-timing-function: ease;
+    transition-property: color, background-color;
+    transition-duration: 0.75s;
+    transition-timing-function: ease;
+}
+
+h1.dark {
+    background-color: #424242;
+}
+
+h1.light {
+    background-color: #F2F2F2;
+    color: #282828;
+}
+

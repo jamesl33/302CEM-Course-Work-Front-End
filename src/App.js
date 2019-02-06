@@ -1,28 +1,30 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react'
+import './App.css'
+import Sensor from './components/sensor/sensor'
+import openSocket from 'socket.io-client'
 
 class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
-    );
-  }
+    constructor(props){
+	super(props)
+	this.state = {
+	    socket: openSocket("localhost:8080"),
+	    light: 0
+	}
+	
+	let self = this
+	this.state.socket.on('hello', data => {
+	    console.log(data)
+	    this.setState({light: data})
+	})
+    }
+    render() {
+	console.log('temp:' + this.state.light)
+	return (
+		<div className="App">
+		<Sensor type="Light">{this.state.light}</Sensor>
+		</div>
+	)
+    }
 }
 
-export default App;
+export default App
