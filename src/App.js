@@ -21,7 +21,13 @@ class App extends Component {
 	console.log('temp:' + this.state.light)
 	return (
 		<div className="App">
+		<div className="sensorArray">
 		<Sensor type="Light">{this.state.light}</Sensor>
+		<Sensor type="Light">{this.state.light}</Sensor>
+		<Sensor type="Light">{this.state.light}</Sensor>
+		<Sensor type="Light">{this.state.light}</Sensor>
+		<Sensor type="Light">{this.state.light}</Sensor>
+		</div>
 		</div>
 	)
     }

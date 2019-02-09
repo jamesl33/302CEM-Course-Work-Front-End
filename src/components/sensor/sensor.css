@@ -1,6 +1,5 @@
 .sensor {
     min-width: 25%;
-    height: 30vh;
     float: left;
 }
 
@@ -8,7 +7,9 @@ h2 {
     color: white;
     text-align: center;
     font-size: 3.5em;
-    padding-bottom: 0.1em;
+    padding-bottom: 0.175em;
+    padding-left: 0.175em;
+    padding-right: 0.175em;
     width: 100%;
     -webkit-transition-property: color, background-color;
     -webkit-transition-duration: 0.75s;
@@ -30,6 +31,8 @@ h2.light {
 h1 {
     color: white;
     text-align: center;
+    padding-left: 0.175em;
+    padding-right: 0.175em;
     font-size: 10em;
     -webkit-transition-property: color, background-color;
     -webkit-transition-duration: 0.75s;
@@ -39,11 +42,11 @@ h1 {
     transition-timing-function: ease;
 }
 
-h1.dark {
+h1.dark, .sensor.dark {
     background-color: #424242;
 }
 
-h1.light {
+h1.light, .sensor.light {
     background-color: #F2F2F2;
     color: #282828;
 }

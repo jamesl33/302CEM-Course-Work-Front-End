@@ -16,7 +16,7 @@ class Sensor extends Component {
     render() {
 	let css = this.lightCSS()
 	return(
-		<div className={`sensor ${this.props.type}`}>
+		<div className={`sensor ${this.props.type} ${css}`}>
 		<h2 className={`header ${css}`}>{this.props.type}</h2>
 		<h1 className={`data ${css}`}>{this.props.children}</h1>
 		</div>
