@@ -19,7 +19,7 @@ class Sensor extends Component {
 	}
     }
     typeOfSensor(){
-	if(this.props.type == 'Light'){
+	if(this.props.type === 'Light'){
 	    return(
 		    <div>
 		    <Light parentCSS={this.lightCSS} css={this.state.css}>{this.props.children}</Light>
