@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import ValueDisplay from '../../../valueDisplay/valueDisplay'
 import './light.css'
 
 class Light extends Component {
@@ -20,6 +21,10 @@ class Light extends Component {
 	return(
 		<div>
 		<h1 className={`data ${this.props.css}`}>{this.shortener()}</h1>
+		<h3 className={this.props.css}>Activation Threshold</h3>
+		<div className='adjuster'>
+		<ValueDisplay css={this.props.css}>{this.props.threshold}</ValueDisplay>
+		</div>
 		</div>
 	)
     }

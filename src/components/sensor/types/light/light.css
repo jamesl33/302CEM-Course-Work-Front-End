@@ -1,0 +1,11 @@
+h3 {
+    padding-bottom: 0.5em;
+    text-align: center;
+    font-size: 2em;
+}
+
+.adjuster {
+    width: 33%;
+    margin: auto;
+    padding-bottom: 1em;
+}

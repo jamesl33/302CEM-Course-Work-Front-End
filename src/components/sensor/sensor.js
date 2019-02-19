@@ -12,7 +12,7 @@ class Sensor extends Component {
 	this.typeOfSensor = this.typeOfSensor.bind(this)
     }
     lightCSS(){
-	if(this.props.children < 50){
+	if(this.props.children < 500000){
 	    this.setState({css: "dark"})
 	} else {
 	    this.setState({css: "light"})
@@ -22,7 +22,7 @@ class Sensor extends Component {
 	if(this.props.type === 'Light'){
 	    return(
 		    <div>
-		    <Light parentCSS={this.lightCSS} css={this.state.css} location={this.props.location}>{this.props.children}</Light>
+		    <Light parentCSS={this.lightCSS} css={this.state.css} location={this.props.location} threshold={this.props.threshold}>{this.props.children}</Light>
 		    </div>
 	    )
 	}

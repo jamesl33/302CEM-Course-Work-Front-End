@@ -10,7 +10,9 @@ class App extends Component {
 	    socket: openSocket("localhost:8080"),
 	    light: {
 		interior: 0,
-		exterior: 0
+		interiorThreshold: 100,
+		exterior: 0,
+		exteriorThreshold: 100,
 	    }
 	}
 	
@@ -31,8 +33,8 @@ class App extends Component {
 	return (
 		<div className="App">
 		<div className="sensorArray">
-		<Sensor type="Light" location="Interior">{this.state.light.interior}</Sensor>
-		<Sensor type="Light" location="Exterior">{this.state.light.exterior}</Sensor>
+		<Sensor type="Light" location="Interior" threshold={this.state.light.interiorThreshold}>{this.state.light.interior}</Sensor>
+		<Sensor type="Light" location="Exterior" threshold={this.state.light.exteriorThreshold}>{this.state.light.exterior}</Sensor>
 		</div>
 		</div>
 	)

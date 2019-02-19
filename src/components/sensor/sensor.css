@@ -3,6 +3,24 @@
     float: left;
 }
 
+h1 {
+    color: white;
+    text-align: center;
+    padding-left: 0.175em;
+    padding-right: 0.175em;
+    font-size: 10em;
+}
+
+.dark {
+    background-color: #424242;
+    color: white;
+}
+
+.light {
+    background-color: #F2F2F2;
+    color: #282828;
+}
+
 h2 {
     color: white;
     text-align: center;
@@ -11,12 +29,6 @@ h2 {
     padding-left: 0.175em;
     padding-right: 0.175em;
     width: 100%;
-    -webkit-transition-property: color, background-color;
-    -webkit-transition-duration: 0.75s;
-    -webkit-transition-timing-function: ease;
-    transition-property: color, background-color;
-    transition-duration: 0.75s;
-    transition-timing-function: ease;
 }
 
 h2.dark {
@@ -28,26 +40,5 @@ h2.light {
     color: #282828;
 }
 
-h1 {
-    color: white;
-    text-align: center;
-    padding-left: 0.175em;
-    padding-right: 0.175em;
-    font-size: 10em;
-    -webkit-transition-property: color, background-color;
-    -webkit-transition-duration: 0.75s;
-    -webkit-transition-timing-function: ease;
-    transition-property: color, background-color;
-    transition-duration: 0.75s;
-    transition-timing-function: ease;
-}
 
-h1.dark, .sensor.dark {
-    background-color: #424242;
-}
-
-h1.light, .sensor.light {
-    background-color: #F2F2F2;
-    color: #282828;
-}
 
