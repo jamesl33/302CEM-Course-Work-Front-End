@@ -22,7 +22,7 @@ class Sensor extends Component {
 	if(this.props.type === 'Light'){
 	    return(
 		    <div>
-		    <Light parentCSS={this.lightCSS} css={this.state.css}>{this.props.children}</Light>
+		    <Light parentCSS={this.lightCSS} css={this.state.css} location={this.props.location}>{this.props.children}</Light>
 		    </div>
 	    )
 	}
@@ -31,7 +31,7 @@ class Sensor extends Component {
 	let sensor = this.typeOfSensor()
 	return(
 		<div className={`sensor ${this.props.type} ${this.state.css}`}>
-		<h2 className={`header ${this.state.css}`}>{this.props.type}</h2>
+		<h2 className={`header ${this.state.css}`}>{this.props.type}, {this.props.location}</h2>
 		{sensor}
 		</div>
 	)
