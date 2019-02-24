@@ -5,7 +5,8 @@ h3 {
 }
 
 .adjuster {
-    width: 33%;
+    display: flex;
+    width: 66%;
     margin: auto;
     padding-bottom: 1em;
 }

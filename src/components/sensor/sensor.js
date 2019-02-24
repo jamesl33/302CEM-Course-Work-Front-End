@@ -22,7 +22,7 @@ class Sensor extends Component {
 	if(this.props.type === 'Light'){
 	    return(
 		    <div>
-		    <Light parentCSS={this.lightCSS} css={this.state.css} location={this.props.location} threshold={this.props.threshold}>{this.props.children}</Light>
+		    <Light parentCSS={this.lightCSS} css={this.state.css} location={this.props.location} threshold={this.props.threshold} incrementThreshold={this.props.incrementThreshold} decrementThreshold={this.props.decrementThreshold}>{this.props.children}</Light>
 		    </div>
 	    )
 	}

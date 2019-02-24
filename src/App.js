@@ -4,45 +4,56 @@ import Sensor from './components/sensor/sensor'
 import openSocket from 'socket.io-client'
 
 class App extends Component {
-    constructor(props) {
+    constructor(props){
         super(props)
-
         this.state = {
             socket: openSocket("localhost:8080"),
             light: {
                 interior: 0,
-                interiorThreshold: 100,
+                interiorThreshold: 10000,
                 exterior: 0,
-                exteriorThreshold: 100,
+                exteriorThreshold: 10000,
             }
         }
 
         this.state.socket.on('tunnel', data => {
-            if (data.topic === 'interior') {
-                let newJSON = this.state.light
-                newJSON.interior = data.message
-                this.setState({ light: newJSON })
-            } else if (data.topic === 'exterior') {
-                let newJSON = this.state.light
-                newJSON.exterior = data.message
-                this.setState({ light: newJSON })
-            }
-        })
-
+	    if(data.topic === 'interior'){
+		let newJSON = this.state.light
+		newJSON.interior = data.message
+		this.setState({light: newJSON})
+	    } else if(data.topic === 'exterior'){
+		let newJSON = this.state.light
+		newJSON.exterior = data.message
+		this.setState({light: newJSON})
+	    }
+	})
+	
+	this.incrementThreshold = this.incrementThreshold.bind(this)
+	this.decrementThreshold = this.decrementThreshold.bind(this)
         this.updateLightThreshold = this.updateLightThreshold.bind(this)
     }
-
-    render() {
-        return (
-            <div className="App">
-                <div className="sensorArray">
-                    <Sensor type="Light" location="Interior" threshold={this.state.light.interiorThreshold}>{this.state.light.interior}</Sensor>
-                    <Sensor type="Light" location="Exterior" threshold={this.state.light.exteriorThreshold}>{this.state.light.exterior}</Sensor>
-                </div>
-            </div>
-        )
+    incrementThreshold(location){
+	if(location === "Interior"){
+	    let newJSON = this.state.light
+	    newJSON.interiorThreshold = newJSON.interiorThreshold + 1000
+	    this.setState({light: newJSON})
+	} else {
+	    let newJSON = this.state.light
+	    newJSON.exteriorThreshold = newJSON.exteriorThreshold + 1000
+	    this.setState({light: newJSON})
+	}
     }
-
+    decrementThreshold(location){
+	if(location === "Interior"){
+	    let newJSON = this.state.light
+	    newJSON.interiorThreshold = newJSON.interiorThreshold - 1000
+	    this.setState({light: newJSON})
+	} else {
+	    let newJSON = this.state.light
+	    newJSON.exteriorThreshold = newJSON.exteriorThreshold - 1000
+	    this.setState({light: newJSON})
+	}
+    }
     /**
      * Update the light timeout values in the external database.
      *
@@ -63,6 +74,16 @@ class App extends Component {
                 // TODO(Toby Ward) - Response successful, update displayed values?
             }
         })
+    }
+    render() {
+	return (
+		<div className="App">
+		<div className="sensorArray">
+		<Sensor type="Light" location="Interior" threshold={this.state.light.interiorThreshold} incrementThreshold={this.incrementThreshold} decrementThreshold={this.decrementThreshold}>{this.state.light.interior}</Sensor>
+		<Sensor type="Light" location="Exterior" threshold={this.state.light.exteriorThreshold} incrementThreshold={this.incrementThreshold} decrementThreshold={this.decrementThreshold}>{this.state.light.exterior}</Sensor>
+		</div>
+		</div>
+	)
     }
 }
 

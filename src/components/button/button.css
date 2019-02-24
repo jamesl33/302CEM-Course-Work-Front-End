@@ -1,0 +1,35 @@
+.btn-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bolder;
+    font-size: 5em;
+    min-width: 20%;
+    flex-grow: 1;
+}
+
+.btn-wrapper.red{
+    background-color: #EE2B2B;
+    border: 5px solid #BD0F0F;
+    color: white;
+}
+
+.btn-wrapper.red:hover:not(.disabled){
+    background-color: #BD0F0F;
+}
+
+.btn-wrapper.green{
+    background-color: #26ED58;
+    border: 5px solid #0FBD3B;
+    color: black;
+}
+
+.btn-wrapper.green:hover:not(.disabled){
+    background-color: #0FBD3B;
+}
+
+.btn-wrapper.disabled{
+    background-color: #C0C0C0;
+    border: 5px solid #888;
+    color: white;
+}

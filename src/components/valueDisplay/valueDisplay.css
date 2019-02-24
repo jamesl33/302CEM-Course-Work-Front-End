@@ -6,21 +6,15 @@
     font-size: 5em;
     outline: 0;
     width: 100%;
-    flex: 1 1 0;
-    -webkit-transition-property: color, background-color;
-    -webkit-transition-duration: 0.75s;
-    -webkit-transition-timing-function: ease;
-    transition-property: color, background-color;
-    transition-duration: 0.75s;
-    transition-timing-function: ease;
+    flex-grow: 2;
 }
 
 .valueDisplay.dark {
-    outline: 5px solid white;
+    border: 5px solid white;
     color: white;
 }
 
 .valueDisplay.light {
-    outline: 5px solid #282828;
+    border: 5px solid #282828;
     color: #282828;
 }
