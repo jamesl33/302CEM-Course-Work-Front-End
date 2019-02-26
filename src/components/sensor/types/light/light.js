@@ -24,9 +24,9 @@ class Light extends Component {
 		<h1 className={`data ${this.props.css}`}>{this.shortener()}</h1>
 		<h3 className={this.props.css}>Activation Threshold</h3>
 		<div className='adjuster'>
-		<Button clickMethod={this.props.decrementThreshold} location={this.props.location} disabled={false}>-</Button>
+		<Button clickMethod={this.props.decrementThreshold} disabled={false}>-</Button>
 		<ValueDisplay css={this.props.css}>{this.props.threshold}</ValueDisplay>
-		<Button clickMethod={this.props.incrementThreshold} location={this.props.location} disabled={false}>+</Button>
+		<Button clickMethod={this.props.incrementThreshold} disabled={false}>+</Button>
 		</div>
 		</div>
 	)

@@ -7,23 +7,20 @@ class App extends Component {
     constructor(props){
         super(props)
         this.state = {
-            socket: openSocket("localhost:8080"),
+            socket: openSocket("10.0.74.95:8080"),
             light: {
-                interior: 0,
-                interiorThreshold: 10000,
-                exterior: 0,
-                exteriorThreshold: 10000,
+                value: 0,
+                threshold: 10000,
             }
         }
 
         this.state.socket.on('tunnel', data => {
-	    if(data.topic === 'interior'){
+	    console.log('received')
+	    let jsonData = JSON.parse(data)
+	    if(jsonData.topic === '302CEM/bear/sensor_0/light_1'){
+		console.log('match')
 		let newJSON = this.state.light
-		newJSON.interior = data.message
-		this.setState({light: newJSON})
-	    } else if(data.topic === 'exterior'){
-		let newJSON = this.state.light
-		newJSON.exterior = data.message
+		newJSON.value = jsonData.message
 		this.setState({light: newJSON})
 	    }
 	})
@@ -33,45 +30,45 @@ class App extends Component {
         this.updateLightThreshold = this.updateLightThreshold.bind(this)
     }
     incrementThreshold(location){
+	let newJSON = this.state.light
 	if(location === "Interior"){
-	    let newJSON = this.state.light
-	    newJSON.interiorThreshold = newJSON.interiorThreshold + 1000
-	    this.setState({light: newJSON})
-	} else {
-	    let newJSON = this.state.light
-	    newJSON.exteriorThreshold = newJSON.exteriorThreshold + 1000
-	    this.setState({light: newJSON})
+	    newJSON.threshold = newJSON.threshold + 1000
+	    if(this.updateLightThreshold(newJSON.threshold)){
+		this.setState({light: newJSON})
+	    } else {
+		console.log("oh noes")
+	    }
 	}
     }
     decrementThreshold(location){
+	let newJSON = this.state.light
 	if(location === "Interior"){
-	    let newJSON = this.state.light
-	    newJSON.interiorThreshold = newJSON.interiorThreshold - 1000
-	    this.setState({light: newJSON})
-	} else {
-	    let newJSON = this.state.light
-	    newJSON.exteriorThreshold = newJSON.exteriorThreshold - 1000
-	    this.setState({light: newJSON})
+	    newJSON.threshold = newJSON.threshold - 1000
+	    if(this.updateLightThreshold(newJSON.threshold)){
+		this.setState({light: newJSON})
+	    } else {
+		console.log("oh noes")
+	    }
 	}
     }
     /**
      * Update the light timeout values in the external database.
      *
-     * @param {bool} which - True updates interior, false updates exterior
+     * @param {int} timeoutValue - The timeout value
      */
-    updateLightThreshold(which = true) {
-        fetch("//localhost:8080/api/sensors/lights/timeout", {
+    updateLightThreshold(timeoutValue) {
+        fetch("//10.0.74.95:8080/api/sensors/lights/timeout", {
             body: JSON.stringify({
-                id: which ? this.state.light.interior : this.state.light.exterior,
-                timeout: which ? this.state.light.interiorThreshold : this.state.light.exteriorThreshold
+                id: 0,
+                timeout: timeoutValue
             }),
             headers: { 'content-type': 'application/json' },
             method: 'post'
         }).then(response => {
             if (!response.ok) {
-                // TODO(Toby Ward) - Response failed, display error?
+                return false
             } else {
-                // TODO(Toby Ward) - Response successful, update displayed values?
+                return true
             }
         })
     }
@@ -79,8 +76,7 @@ class App extends Component {
 	return (
 		<div className="App">
 		<div className="sensorArray">
-		<Sensor type="Light" location="Interior" threshold={this.state.light.interiorThreshold} incrementThreshold={this.incrementThreshold} decrementThreshold={this.decrementThreshold}>{this.state.light.interior}</Sensor>
-		<Sensor type="Light" location="Exterior" threshold={this.state.light.exteriorThreshold} incrementThreshold={this.incrementThreshold} decrementThreshold={this.decrementThreshold}>{this.state.light.exterior}</Sensor>
+		<Sensor type="Light" threshold={this.state.light.threshold} incrementThreshold={this.incrementThreshold} decrementThreshold={this.decrementThreshold}>{this.state.light.value}</Sensor>
 		</div>
 		</div>
 	)

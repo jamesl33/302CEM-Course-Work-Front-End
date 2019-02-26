@@ -10,7 +10,7 @@ class Button extends Component{
     handleButtonClick(event){
 	event.stopPropagation()
 	if(!this.props.disabled){
-	    this.props.clickMethod(this.props.location)
+	    this.props.clickMethod()
 	}
     }
     handleCSS(){
