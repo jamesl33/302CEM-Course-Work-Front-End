@@ -7,7 +7,7 @@ class App extends Component {
     constructor(props){
         super(props)
         this.state = {
-            socket: openSocket("10.0.74.95:8080"),
+            socket: openSocket("localhost:8080"),
             light: {
                 value: 0,
                 threshold: 10000,
@@ -15,62 +15,83 @@ class App extends Component {
         }
 
         this.state.socket.on('tunnel', data => {
-	    console.log('received')
 	    let jsonData = JSON.parse(data)
 	    if(jsonData.topic === '302CEM/bear/sensor_0/light_1'){
-		console.log('match')
 		let newJSON = this.state.light
 		newJSON.value = jsonData.message
 		this.setState({light: newJSON})
 	    }
 	})
-	
+
 	this.incrementThreshold = this.incrementThreshold.bind(this)
 	this.decrementThreshold = this.decrementThreshold.bind(this)
-        this.updateLightThreshold = this.updateLightThreshold.bind(this)
+        this.getLightThreshold = this.getLightThreshold.bind(this)
+        this.setLightThreshold = this.setLightThreshold.bind(this)
     }
     incrementThreshold(location){
 	let newJSON = this.state.light
 	if(location === "Interior"){
 	    newJSON.threshold = newJSON.threshold + 1000
-	    if(this.updateLightThreshold(newJSON.threshold)){
-		this.setState({light: newJSON})
-	    } else {
-		console.log("oh noes")
-	    }
+
+            this.setLightThreshold(newJSON.threshold, (err) => {
+                if (err) {
+                    console.log(err)
+                } else {
+                    this.setState({light: newJSON})
+                }
+            })
 	}
     }
     decrementThreshold(location){
 	let newJSON = this.state.light
 	if(location === "Interior"){
 	    newJSON.threshold = newJSON.threshold - 1000
-	    if(this.updateLightThreshold(newJSON.threshold)){
-		this.setState({light: newJSON})
-	    } else {
-		console.log("oh noes")
-	    }
+            this.setLightThreshold(newJSON.threshold, (err) => {
+                if (err) {
+                    console.log(err)
+                } else {
+                    this.setState({light: newJSON})
+                }
+            })
 	}
     }
     /**
-     * Update the light timeout values in the external database.
-     *
-     * @param {int} timeoutValue - The timeout value
+     * @description Get the current light threshold value from the api
+     * @param {Function} callback - Callback with the signiture (err, threshold)
      */
-    updateLightThreshold(timeoutValue) {
-        fetch("//10.0.74.95:8080/api/sensors/lights/timeout", {
-            body: JSON.stringify({
-                id: 0,
-                timeout: timeoutValue
-            }),
-            headers: { 'content-type': 'application/json' },
-            method: 'post'
-        }).then(response => {
-            if (!response.ok) {
-                return false
-            } else {
-                return true
-            }
-        })
+    async getLightThreshold(callback) {
+        try {
+            callback(null, await fetch("//localhost:8080/api/sensors/light/threshold?id=0", {
+                method: 'get'
+            }).then(response => {
+                return response.json()
+            }).then(json => {
+                return json.threshold
+            }))
+        } catch (err) {
+            callback(err)
+        }
+    }
+    /**
+     * @description Set a new light threshold value using the api
+     * @param {Integer} threshold - The new threshold value
+     * @param {Function} callback - Callback with the signiture (err)
+     */
+    async setLightThreshold(threshold, callback) {
+        try {
+            await fetch("//localhost:8080/api/sensors/light/threshold", {
+                body: JSON.stringify({
+                    id: 0,
+                    threshold: threshold
+                }),
+                headers: {'content-type': 'application/json'},
+                method: 'post'
+            })
+
+            callback(null)
+        } catch (err) {
+            callback(err)
+        }
     }
     render() {
 	return (
