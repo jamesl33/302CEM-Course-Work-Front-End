@@ -1,11 +1,15 @@
 import React, { Component } from 'react'
 import './valueDisplay.css'
 
+/** Class for displaying a single value for an incrementer, etc. */
 class ValueDisplay extends Component {
     constructor(props){
 	super(props)
 	this.shortener = this.shortener.bind(this)
     }
+    /**
+     * @description Function for shortening values above 10000 to use 'k'
+     */
     shortener(){
 	if(this.props.children.toString().length > 4){
 	    let newNumber = this.props.children / 1000

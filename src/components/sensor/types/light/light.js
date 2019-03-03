@@ -3,11 +3,16 @@ import ValueDisplay from '../../../valueDisplay/valueDisplay'
 import Button from '../../../button/button'
 import './light.css'
 
+/** Class for handling the light sensor */
 class Light extends Component {
     constructor(props){
 	super(props)
 	this.shortener = this.shortener.bind(this)
+	this.determineCSS = this.determineCSS.bind(this)
     }
+    /**
+     * @description Function for shortening large values (over 9999)
+     */
     shortener(){
 	if(this.props.children.toString().length > 4){
 	    let newNumber = this.props.children / 1000
@@ -16,6 +21,16 @@ class Light extends Component {
 	    return `${newNumber}k`
 	} else {
 	    return this.props.children
+	}
+    }
+    /**
+     * @description Function for determining what CSS class to use
+     */
+    determineCSS(){
+	if(this.props.children < 500000){
+	    return 'dark'
+	} else {
+	    return 'light'
 	}
     }
     render(){
@@ -32,12 +47,13 @@ class Light extends Component {
 	)
     }
     componentDidMount(){
-	this.props.parentCSS()
+	/** Important: You MUST set the parent CSS on mount, otherwise CSS will be borked for the sensor */
+	this.props.parentCSS(this.determineCSS())
     }
     componentDidUpdate(prevProps){
-	/* Only update when the data value changes */
+	/** Update the css when the data value changes. MUST be conditional, otherwise you'll be stuck in infinite updates */
 	if(this.props.children !== prevProps.children){
-	    this.props.parentCSS()
+	    this.props.parentCSS(this.determineCSS())
 	}
     }
 }

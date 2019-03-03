@@ -6,6 +6,8 @@ import openSocket from 'socket.io-client'
 class App extends Component {
     constructor(props){
         super(props)
+
+	/* Initialise the state of the App */
         this.state = {
             socket: openSocket("localhost:8080"),
             light: {
@@ -14,6 +16,7 @@ class App extends Component {
             }
         }
 
+	/* Tunnel functionality. Handle MQTT data in here */
         this.state.socket.on('tunnel', data => {
 	    let jsonData = JSON.parse(data)
 	    if(jsonData.topic === '302CEM/bear/sensor_0/light_1'){
@@ -23,41 +26,43 @@ class App extends Component {
 	    }
 	})
 
+	/* Function binds */
 	this.incrementThreshold = this.incrementThreshold.bind(this)
 	this.decrementThreshold = this.decrementThreshold.bind(this)
         this.getLightThreshold = this.getLightThreshold.bind(this)
         this.setLightThreshold = this.setLightThreshold.bind(this)
     }
-    incrementThreshold(location){
+    incrementThreshold(){
+	/**
+         * @description Increment the current light threshold by 1000
+         */
 	let newJSON = this.state.light
-	if(location === "Interior"){
-	    newJSON.threshold = newJSON.threshold + 1000
-
-            this.setLightThreshold(newJSON.threshold, (err) => {
-                if (err) {
-                    console.log(err)
-                } else {
-                    this.setState({light: newJSON})
-                }
-            })
-	}
+	newJSON.threshold = newJSON.threshold + 1000
+        this.setLightThreshold(newJSON.threshold, (err) => {
+            if (err) {
+                console.log(err)
+            } else {
+                this.setState({light: newJSON})
+            }
+        })
     }
-    decrementThreshold(location){
+    decrementThreshold(){
+	/**
+         * @description Increment the current light threshold by 1000
+         */
 	let newJSON = this.state.light
-	if(location === "Interior"){
-	    newJSON.threshold = newJSON.threshold - 1000
-            this.setLightThreshold(newJSON.threshold, (err) => {
-                if (err) {
-                    console.log(err)
-                } else {
-                    this.setState({light: newJSON})
-                }
-            })
-	}
+	newJSON.threshold = newJSON.threshold - 1000
+        this.setLightThreshold(newJSON.threshold, (err) => {
+            if (err) {
+                console.log(err)
+            } else {
+                this.setState({light: newJSON})
+            }
+        })
     }
     /**
      * @description Get the current light threshold value from the api
-     * @param {Function} callback - Callback with the signiture (err, threshold)
+     * @param {Function} callback - Callback with the signature (err, threshold)
      */
     async getLightThreshold(callback) {
         try {
@@ -75,7 +80,7 @@ class App extends Component {
     /**
      * @description Set a new light threshold value using the api
      * @param {Integer} threshold - The new threshold value
-     * @param {Function} callback - Callback with the signiture (err)
+     * @param {Function} callback - Callback with the signature (err)
      */
     async setLightThreshold(threshold, callback) {
         try {
@@ -101,6 +106,20 @@ class App extends Component {
 		</div>
 		</div>
 	)
+    }
+    componentDidMount(){
+	/* Any initialization functions that request from the Remote API (e.g. getLightThreshold) MUST be called in here and NOT at render */
+	this.getLightThreshold((err, threshold) => {
+	    if(err){
+		console.log("Got an error:")
+		console.log(err)
+	    } else {
+		console.log(threshold)
+		let newJSON = this.state.light
+		newJSON.threshold = threshold
+		this.setState({light: newJSON})
+	    }
+	})
     }
 }
 

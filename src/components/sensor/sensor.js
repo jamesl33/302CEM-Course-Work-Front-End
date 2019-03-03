@@ -2,27 +2,34 @@ import React, { Component } from 'react'
 import './sensor.css'
 import Light from './types/light/light'
 
+/** Class for creating the actual sensor box with Heading and 'Content', where content is determined by a separate class (e.g. Light) */
 class Sensor extends Component {
     constructor(props){
 	super(props)
+	/* The CSS for the sensor (e.g. background colour) must be handled
+         * here and then passed onto the content box for use. Pass functions
+         * to the 'Content' classes that manipulate this state
+         */
 	this.state = {
 	    css: ""
 	}
-	this.lightCSS = this.lightCSS.bind(this)
+	this.setCSS = this.setCSS.bind(this)
 	this.typeOfSensor = this.typeOfSensor.bind(this)
     }
-    lightCSS(){
-	if(this.props.children < 500000){
-	    this.setState({css: "dark"})
-	} else {
-	    this.setState({css: "light"})
-	}
+    /**
+     * @description Function for setting the CSS state from a child Content class
+     */
+    setCSS(newCSS){
+	this.setState({css: newCSS})
     }
+    /**
+     * @description Function for determining the type of sensor to use based on props given to it. You MUST pass setCSS to the child somehow, otherwhise CSS will bork out
+     */
     typeOfSensor(){
 	if(this.props.type === 'Light'){
 	    return(
 		    <div>
-		    <Light parentCSS={this.lightCSS} css={this.state.css} threshold={this.props.threshold} incrementThreshold={this.props.incrementThreshold} decrementThreshold={this.props.decrementThreshold}>{this.props.children}</Light>
+		    <Light parentCSS={this.setCSS} css={this.state.css} threshold={this.props.threshold} incrementThreshold={this.props.incrementThreshold} decrementThreshold={this.props.decrementThreshold}>{this.props.children}</Light>
 		    </div>
 	    )
 	}
