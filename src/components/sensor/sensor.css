@@ -21,6 +21,21 @@ h1 {
     color: #282828;
 }
 
+.cold {
+    background-color: #43A1FE;
+    color: white;
+}
+
+.hot {
+    background-color: #FE9241;
+    color: white;
+}
+
+.good {
+    background-color: #26ED58;
+    color: #282828;
+}
+
 h2 {
     color: white;
     text-align: center;
@@ -37,6 +52,19 @@ h2.dark {
 
 h2.light {
     background-color: #DBDBDB;
+    color: #282828;
+}
+
+h2.cold {
+    background-color: #268AED;
+}
+
+h2.hot {
+    background-color: #ED7728;
+}
+
+h2.good {
+    background-color: #0FBD3B;
     color: #282828;
 }
 

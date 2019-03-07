@@ -13,7 +13,12 @@ class App extends Component {
             light: {
                 value: 0,
                 threshold: 10000,
-            }
+            },
+	    temperature: {
+		value: 20.00,
+		minThreshold: 16.00,
+		maxThreshold: 24.00
+	    }
         }
 
 	/* Tunnel functionality. Handle MQTT data in here */
@@ -24,13 +29,26 @@ class App extends Component {
 		newJSON.value = jsonData.message
 		this.setState({light: newJSON})
 	    }
+	    if(jsonData.topic === '302CEM/bear/sensor_0/temperature_0'){
+		let newJSON = this.state.temperature
+		newJSON.value = jsonData.message
+		this.setState({temperature: newJSON})
+	    }
 	})
 
 	/* Function binds */
 	this.incrementThreshold = this.incrementThreshold.bind(this)
 	this.decrementThreshold = this.decrementThreshold.bind(this)
+	this.incrementMinTempThreshold = this.incrementMinTempThreshold.bind(this)
+	this.decrementMinTempThreshold = this.decrementMinTempThreshold.bind(this)
+	this.incrementMaxTempThreshold = this.incrementMaxTempThreshold.bind(this)
+	this.decrementMaxTempThreshold = this.decrementMaxTempThreshold.bind(this)
         this.getLightThreshold = this.getLightThreshold.bind(this)
         this.setLightThreshold = this.setLightThreshold.bind(this)
+	this.getMinTempThreshold = this.getMinTempThreshold.bind(this)
+        this.setMinTempThreshold = this.setMinTempThreshold.bind(this)
+	this.getMaxTempThreshold = this.getMaxTempThreshold.bind(this)
+        this.setMaxTempThreshold = this.setMaxTempThreshold.bind(this)
     }
     incrementThreshold(){
 	/**
@@ -48,7 +66,7 @@ class App extends Component {
     }
     decrementThreshold(){
 	/**
-         * @description Increment the current light threshold by 1000
+         * @description Decrement the current light threshold by 1000
          */
 	let newJSON = this.state.light
 	newJSON.threshold = newJSON.threshold - 1000
@@ -57,6 +75,62 @@ class App extends Component {
                 console.log(err)
             } else {
                 this.setState({light: newJSON})
+            }
+        })
+    }
+    incrementMinTempThreshold(){
+	/**
+         * @description Increment the current min temp threshold by 0.5
+         */
+	let newJSON = this.state.temperature
+	newJSON.minThreshold = newJSON.minThreshold + 0.5
+        this.setMinTempThreshold(newJSON.minThreshold, (err) => {
+            if (err) {
+                console.log(err)
+            } else {
+                this.setState({temperature: newJSON})
+            }
+        })
+    }
+    decrementMinTempThreshold(){
+	/**
+         * @description Decrement the current min temp threshold by 0.5
+         */
+	let newJSON = this.state.temperature
+	newJSON.minThreshold = newJSON.minThreshold - 0.5
+        this.setMinTempThreshold(newJSON.minThreshold, (err) => {
+            if (err) {
+                console.log(err)
+            } else {
+                this.setState({temperature: newJSON})
+            }
+        })
+    }
+    incrementMaxTempThreshold(){
+	/**
+         * @description Increment the current max temp threshold by 0.5
+         */
+	let newJSON = this.state.temperature
+	newJSON.maxThreshold = newJSON.maxThreshold + 0.5
+        this.setMaxTempThreshold(newJSON.maxThreshold, (err) => {
+            if (err) {
+                console.log(err)
+            } else {
+                this.setState({temperature: newJSON})
+            }
+        })
+    }
+    decrementMaxTempThreshold(){
+	/**
+         * @description Decrement the current max temp threshold by 0.5
+         */
+	let newJSON = this.state.temperature
+	newJSON.maxThreshold = newJSON.maxThreshold - 0.5
+        this.setMaxTempThreshold(newJSON.maxThreshold, (err) => {
+            if (err) {
+                console.log(err)
+            } else {
+                this.setState({temperature: newJSON})
             }
         })
     }
@@ -77,6 +151,7 @@ class App extends Component {
             callback(err)
         }
     }
+    
     /**
      * @description Set a new light threshold value using the api
      * @param {Integer} threshold - The new threshold value
@@ -98,11 +173,90 @@ class App extends Component {
             callback(err)
         }
     }
+    /**
+     * @description Get the current min temp threshold value from the api
+     * @param {Function} callback - Callback with the signature (err, threshold)
+     */
+    async getMinTempThreshold(callback) {
+        try {
+            callback(null, await fetch("//localhost:8080/api/sensors/temperature/threshold/min?id=0", {
+                method: 'get'
+            }).then(response => {
+                return response.json()
+            }).then(json => {
+                return json.threshold
+            }))
+        } catch (err) {
+            callback(err)
+        }
+    }
+    
+    /**
+     * @description Set a new min temp threshold value using the api
+     * @param {Integer} threshold - The new threshold value
+     * @param {Function} callback - Callback with the signature (err)
+     */
+    async setMinTempThreshold(threshold, callback) {
+        try {
+            await fetch("//localhost:8080/api/sensors/temperature/threshold/min", {
+                body: JSON.stringify({
+                    id: 0,
+                    threshold: threshold
+                }),
+                headers: {'content-type': 'application/json'},
+                method: 'post'
+            })
+
+            callback(null)
+        } catch (err) {
+            callback(err)
+        }
+    }
+    /**
+     * @description Get the current max temp threshold value from the api
+     * @param {Function} callback - Callback with the signature (err, threshold)
+     */
+    async getMaxTempThreshold(callback) {
+        try {
+            callback(null, await fetch("//localhost:8080/api/sensors/temperature/threshold/max?id=0", {
+                method: 'get'
+            }).then(response => {
+                return response.json()
+            }).then(json => {
+                return json.threshold
+            }))
+        } catch (err) {
+            callback(err)
+        }
+    }
+    
+    /**
+     * @description Set a new max temp threshold value using the api
+     * @param {Integer} threshold - The new threshold value
+     * @param {Function} callback - Callback with the signature (err)
+     */
+    async setMaxTempThreshold(threshold, callback) {
+        try {
+            await fetch("//localhost:8080/api/sensors/temperature/threshold/max", {
+                body: JSON.stringify({
+                    id: 0,
+                    threshold: threshold
+                }),
+                headers: {'content-type': 'application/json'},
+                method: 'post'
+            })
+
+            callback(null)
+        } catch (err) {
+            callback(err)
+        }
+    }
     render() {
 	return (
 		<div className="App">
 		<div className="sensorArray">
 		<Sensor type="Light" threshold={this.state.light.threshold} incrementThreshold={this.incrementThreshold} decrementThreshold={this.decrementThreshold}>{this.state.light.value}</Sensor>
+		<Sensor type="Temperature" minTempThreshold={this.state.temperature.minThreshold} maxTempThreshold={this.state.temperature.maxThreshold} incrementMinTempThreshold={this.incrementMinTempThreshold} decrementMinTempThreshold={this.decrementMinTempThreshold} incrementMaxTempThreshold={this.incrementMaxTempThreshold} decrementMaxTempThreshold={this.decrementMaxTempThreshold}>{this.state.temperature.value}</Sensor>
 		</div>
 		</div>
 	)
@@ -118,6 +272,28 @@ class App extends Component {
 		let newJSON = this.state.light
 		newJSON.threshold = threshold
 		this.setState({light: newJSON})
+	    }
+	})
+	this.getMinTempThreshold((err, threshold) => {
+	    if(err){
+		console.log("Got an error:")
+		console.log(err)
+	    } else {
+		console.log(threshold)
+		let newJSON = this.state.temperature
+		newJSON.minThreshold = threshold
+		this.setState({temperature: newJSON})
+	    }
+	})
+	this.getMaxTempThreshold((err, threshold) => {
+	    if(err){
+		console.log("Got an error:")
+		console.log(err)
+	    } else {
+		console.log(threshold)
+		let newJSON = this.state.temperature
+		newJSON.maxThreshold = threshold
+		this.setState({temperature: newJSON})
 	    }
 	})
     }

@@ -18,3 +18,18 @@
     border: 5px solid #282828;
     color: #282828;
 }
+
+.valueDisplay.good {
+    border: 5px solid #0FBD3B;
+    color: #282828;
+}
+
+.valueDisplay.hot {
+    border: 5px solid #ED7728;
+    color: white;
+}
+
+.valueDisplay.cold {
+    border: 5px solid #268AED;
+    color: white;
+}

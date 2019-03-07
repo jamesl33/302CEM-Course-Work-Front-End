@@ -1,0 +1,12 @@
+h3 {
+    padding-bottom: 0.5em;
+    text-align: center;
+    font-size: 2em;
+}
+
+.adjuster {
+    display: flex;
+    width: 66%;
+    margin: auto;
+    padding-bottom: 1em;
+}
