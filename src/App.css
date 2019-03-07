@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css?family=Ubuntu');
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -8,6 +10,10 @@
     transition-property: color, background-color, width;
     transition-duration: 0.75s;
     transition-timing-function: ease;
+}
+
+body {
+    font-family: 'Ubuntu', sans-serif;
 }
 
 .sensorArray {
