@@ -3,13 +3,15 @@ import './App.css'
 import Sensor from './components/sensor/sensor'
 import openSocket from 'socket.io-client'
 
+const ip = "https://agiledevbear.ddns.net:8080"
+
 class App extends Component {
     constructor(props){
         super(props)
 
 	/* Initialise the state of the App */
         this.state = {
-            socket: openSocket("localhost:8080"),
+            socket: openSocket(ip),
             light: {
                 value: 0,
                 threshold: 10000,
@@ -140,9 +142,10 @@ class App extends Component {
      */
     async getLightThreshold(callback) {
         try {
-            callback(null, await fetch("//localhost:8080/api/sensors/light/threshold?id=0", {
+            callback(null, await fetch(`${ip}/api/sensors/light/threshold?id=0`, {
                 method: 'get'
             }).then(response => {
+		console.log(response)
                 return response.json()
             }).then(json => {
                 return json.threshold
@@ -159,7 +162,7 @@ class App extends Component {
      */
     async setLightThreshold(threshold, callback) {
         try {
-            await fetch("//localhost:8080/api/sensors/light/threshold", {
+            await fetch(`${ip}/api/sensors/light/threshold`, {
                 body: JSON.stringify({
                     id: 0,
                     threshold: threshold
@@ -179,9 +182,10 @@ class App extends Component {
      */
     async getMinTempThreshold(callback) {
         try {
-            callback(null, await fetch("//localhost:8080/api/sensors/temperature/threshold/min?id=0", {
+            callback(null, await fetch(`${ip}/api/sensors/temperature/threshold/min?id=1`, {
                 method: 'get'
             }).then(response => {
+		console.log(response)
                 return response.json()
             }).then(json => {
                 return json.threshold
@@ -198,9 +202,9 @@ class App extends Component {
      */
     async setMinTempThreshold(threshold, callback) {
         try {
-            await fetch("//localhost:8080/api/sensors/temperature/threshold/min", {
+            await fetch(`${ip}/api/sensors/temperature/threshold/min`, {
                 body: JSON.stringify({
-                    id: 0,
+                    id: 1,
                     threshold: threshold
                 }),
                 headers: {'content-type': 'application/json'},
@@ -218,7 +222,7 @@ class App extends Component {
      */
     async getMaxTempThreshold(callback) {
         try {
-            callback(null, await fetch("//localhost:8080/api/sensors/temperature/threshold/max?id=0", {
+            callback(null, await fetch(`${ip}/api/sensors/temperature/threshold/max?id=1`, {
                 method: 'get'
             }).then(response => {
                 return response.json()
@@ -237,9 +241,9 @@ class App extends Component {
      */
     async setMaxTempThreshold(threshold, callback) {
         try {
-            await fetch("//localhost:8080/api/sensors/temperature/threshold/max", {
+            await fetch(`${ip}/api/sensors/temperature/threshold/max`, {
                 body: JSON.stringify({
-                    id: 0,
+                    id: 1,
                     threshold: threshold
                 }),
                 headers: {'content-type': 'application/json'},
