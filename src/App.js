@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 import './App.css'
 import Sensor from './components/sensor/sensor'
 import openSocket from 'socket.io-client'
@@ -60,7 +62,8 @@ class App extends Component {
 	newJSON.threshold = newJSON.threshold + 1000
         this.setLightThreshold(newJSON.threshold, (err) => {
             if (err) {
-                console.log(err)
+                toast.error(err.message)
+		console.log(err.messsage)
             } else {
                 this.setState({light: newJSON})
             }
@@ -74,7 +77,7 @@ class App extends Component {
 	newJSON.threshold = newJSON.threshold - 1000
         this.setLightThreshold(newJSON.threshold, (err) => {
             if (err) {
-                console.log(err)
+                toast.error(err.message)
             } else {
                 this.setState({light: newJSON})
             }
@@ -88,7 +91,7 @@ class App extends Component {
 	newJSON.minThreshold = newJSON.minThreshold + 0.5
         this.setMinTempThreshold(newJSON.minThreshold, (err) => {
             if (err) {
-                console.log(err)
+                toast.error(err.message)
             } else {
                 this.setState({temperature: newJSON})
             }
@@ -102,7 +105,7 @@ class App extends Component {
 	newJSON.minThreshold = newJSON.minThreshold - 0.5
         this.setMinTempThreshold(newJSON.minThreshold, (err) => {
             if (err) {
-                console.log(err)
+                toast.error(err.message)
             } else {
                 this.setState({temperature: newJSON})
             }
@@ -116,7 +119,7 @@ class App extends Component {
 	newJSON.maxThreshold = newJSON.maxThreshold + 0.5
         this.setMaxTempThreshold(newJSON.maxThreshold, (err) => {
             if (err) {
-                console.log(err)
+                toast.error(err.message)
             } else {
                 this.setState({temperature: newJSON})
             }
@@ -130,7 +133,7 @@ class App extends Component {
 	newJSON.maxThreshold = newJSON.maxThreshold - 0.5
         this.setMaxTempThreshold(newJSON.maxThreshold, (err) => {
             if (err) {
-                console.log(err)
+                toast.error(err.message)
             } else {
                 this.setState({temperature: newJSON})
             }
@@ -145,8 +148,11 @@ class App extends Component {
             callback(null, await fetch(`${ip}/api/sensors/light/threshold?id=0`, {
                 method: 'get'
             }).then(response => {
-		console.log(response)
-                return response.json()
+		if(response.ok){
+		    console.log(response)
+                    return response.json()
+		}
+		throw new Error(`Network response was not ok, status code: ${response.status}`)
             }).then(json => {
                 return json.threshold
             }))
@@ -169,8 +175,11 @@ class App extends Component {
                 }),
                 headers: {'content-type': 'application/json'},
                 method: 'post'
-            })
-
+            }).then(response => {
+		if(!response.ok){
+		    throw new Error(`Network response was not ok, status code: ${response.status}`)
+		}
+	    })
             callback(null)
         } catch (err) {
             callback(err)
@@ -185,8 +194,11 @@ class App extends Component {
             callback(null, await fetch(`${ip}/api/sensors/temperature/threshold/min?id=1`, {
                 method: 'get'
             }).then(response => {
-		console.log(response)
-                return response.json()
+		if(response.ok){
+		    console.log(response)
+                    return response.json()
+		}
+		throw new Error(`Network response was not ok, status code: ${response.status}`)
             }).then(json => {
                 return json.threshold
             }))
@@ -204,15 +216,19 @@ class App extends Component {
         try {
             await fetch(`${ip}/api/sensors/temperature/threshold/min`, {
                 body: JSON.stringify({
-                    id: 1,
+                    id: 0,
                     threshold: threshold
                 }),
                 headers: {'content-type': 'application/json'},
                 method: 'post'
-            })
-
+            }).then(response => {
+		if(!response.ok){
+		    throw new Error(`Network response was not ok, status code: ${response.status}`)
+		}
+	    })
             callback(null)
         } catch (err) {
+	    console.log(err)
             callback(err)
         }
     }
@@ -225,7 +241,10 @@ class App extends Component {
             callback(null, await fetch(`${ip}/api/sensors/temperature/threshold/max?id=1`, {
                 method: 'get'
             }).then(response => {
-                return response.json()
+		if(response.ok){
+                    return response.json()
+		}
+		throw new Error(`Network response was not ok, status code: ${response.status}`)
             }).then(json => {
                 return json.threshold
             }))
@@ -248,8 +267,11 @@ class App extends Component {
                 }),
                 headers: {'content-type': 'application/json'},
                 method: 'post'
-            })
-
+            }).then(response => {
+		if(!response.ok){
+		    throw new Error(`Network response was not ok, status code: ${response.status}`)
+		}
+	    })
             callback(null)
         } catch (err) {
             callback(err)
@@ -258,6 +280,7 @@ class App extends Component {
     render() {
 	return (
 		<div className="App">
+		<ToastContainer position="top-center" />
 		<div className="sensorArray">
 		<Sensor type="Light" threshold={this.state.light.threshold} incrementThreshold={this.incrementThreshold} decrementThreshold={this.decrementThreshold}>{this.state.light.value}</Sensor>
 		<Sensor type="Temperature" minTempThreshold={this.state.temperature.minThreshold} maxTempThreshold={this.state.temperature.maxThreshold} incrementMinTempThreshold={this.incrementMinTempThreshold} decrementMinTempThreshold={this.decrementMinTempThreshold} incrementMaxTempThreshold={this.incrementMaxTempThreshold} decrementMaxTempThreshold={this.decrementMaxTempThreshold}>{this.state.temperature.value}</Sensor>
@@ -269,8 +292,7 @@ class App extends Component {
 	/* Any initialization functions that request from the Remote API (e.g. getLightThreshold) MUST be called in here and NOT at render */
 	this.getLightThreshold((err, threshold) => {
 	    if(err){
-		console.log("Got an error:")
-		console.log(err)
+		toast.error(err.message)
 	    } else {
 		console.log(threshold)
 		let newJSON = this.state.light
@@ -280,8 +302,7 @@ class App extends Component {
 	})
 	this.getMinTempThreshold((err, threshold) => {
 	    if(err){
-		console.log("Got an error:")
-		console.log(err)
+		toast.error(err.message)
 	    } else {
 		console.log(threshold)
 		let newJSON = this.state.temperature
@@ -291,8 +312,7 @@ class App extends Component {
 	})
 	this.getMaxTempThreshold((err, threshold) => {
 	    if(err){
-		console.log("Got an error:")
-		console.log(err)
+		toast.error(err.message)
 	    } else {
 		console.log(threshold)
 		let newJSON = this.state.temperature
