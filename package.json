@@ -1,27 +1,31 @@
 {
-  "name": "interface",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "react": "^16.7.0",
-    "react-dom": "^16.7.0",
-    "react-scripts": "^2.1.5",
-    "react-toastify": "^4.5.2",
-    "socket.io-client": "^2.2.0"
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ]
+    "name": "interface",
+    "version": "0.1.0",
+    "private": true,
+    "homepage": "https://github.coventry.ac.uk/pages/leej64/Bear-302CEM-Course-Work-Front-End",
+    "dependencies": {
+	"gh-pages": "^2.0.1",
+	"react": "^16.7.0",
+	"react-dom": "^16.7.0",
+	"react-scripts": "^2.1.5",
+	"react-toastify": "^4.5.2",
+	"socket.io-client": "^2.2.0"
+    },
+    "scripts": {
+	"start": "react-scripts start",
+	"build": "react-scripts build",
+	"test": "react-scripts test",
+	"predeploy": "npm run build",
+	"deploy": "gh-pages -d build",
+	"eject": "react-scripts eject"
+    },
+    "eslintConfig": {
+	"extends": "react-app"
+    },
+    "browserslist": [
+	">0.2%",
+	"not dead",
+	"not ie <= 11",
+	"not op_mini all"
+    ]
 }
