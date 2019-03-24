@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { ToastContainer, toast } from 'react-toastify'
+import { TimeSeries } from 'pondjs'
 import 'react-toastify/dist/ReactToastify.css'
 import './App.css'
 import Sensor from './components/sensor/sensor'
@@ -47,6 +48,7 @@ class App extends Component {
 	this.decrementMinTempThreshold = this.decrementMinTempThreshold.bind(this)
 	this.incrementMaxTempThreshold = this.incrementMaxTempThreshold.bind(this)
 	this.decrementMaxTempThreshold = this.decrementMaxTempThreshold.bind(this)
+	this.getHistory = this.getHistory.bind(this)
         this.getLightThreshold = this.getLightThreshold.bind(this)
         this.setLightThreshold = this.setLightThreshold.bind(this)
 	this.getMinTempThreshold = this.getMinTempThreshold.bind(this)
@@ -138,6 +140,31 @@ class App extends Component {
                 this.setState({temperature: newJSON})
             }
         })
+    }
+    getHistory(type){
+	if(type === "light"){
+	    let chartData = new TimeSeries({
+	    name: "Historical Light",
+	    columns: ["time", "light"],
+	    points: [[new Date(2019, 3, 21), 20000],
+		     [new Date(2019, 3, 22), 19000],
+		     [new Date(2019, 3, 23), 18000],
+		     [new Date(2019, 3, 24), 17000]
+		    ]
+	    })
+	    return(chartData)
+	} else {
+	    let chartData = new TimeSeries({
+	    name: "Historical Temperatures",
+	    columns: ["time", "temperature"],
+	    points: [[new Date(2019, 3, 20), 20.1],
+		     [new Date(2019, 3, 21), 22.5],
+		     [new Date(2019, 3, 22), 24.6],
+		     [new Date(2019, 3, 23), 28.0]
+		    ]
+	    })
+	    return(chartData)
+	}
     }
     /**
      * @description Get the current light threshold value from the api
@@ -282,8 +309,8 @@ class App extends Component {
 		<div className="App">
 		<ToastContainer position="top-center" />
 		<div className="sensorArray">
-		<Sensor type="Light" threshold={this.state.light.threshold} incrementThreshold={this.incrementThreshold} decrementThreshold={this.decrementThreshold}>{this.state.light.value}</Sensor>
-		<Sensor type="Temperature" minTempThreshold={this.state.temperature.minThreshold} maxTempThreshold={this.state.temperature.maxThreshold} incrementMinTempThreshold={this.incrementMinTempThreshold} decrementMinTempThreshold={this.decrementMinTempThreshold} incrementMaxTempThreshold={this.incrementMaxTempThreshold} decrementMaxTempThreshold={this.decrementMaxTempThreshold}>{this.state.temperature.value}</Sensor>
+		<Sensor type="Light" threshold={this.state.light.threshold} incrementThreshold={this.incrementThreshold} decrementThreshold={this.decrementThreshold} getHistory={this.getHistory}>{this.state.light.value}</Sensor>
+		<Sensor type="Temperature" minTempThreshold={this.state.temperature.minThreshold} maxTempThreshold={this.state.temperature.maxThreshold} incrementMinTempThreshold={this.incrementMinTempThreshold} decrementMinTempThreshold={this.decrementMinTempThreshold} incrementMaxTempThreshold={this.incrementMaxTempThreshold} decrementMaxTempThreshold={this.decrementMaxTempThreshold} getHistory={this.getHistory}>{this.state.temperature.value}</Sensor>
 		</div>
 		</div>
 	)
