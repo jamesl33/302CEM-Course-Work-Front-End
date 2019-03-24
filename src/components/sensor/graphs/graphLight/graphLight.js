@@ -6,6 +6,9 @@ import './graphLight.css'
 class GraphLight extends Component {
     constructor(props){
 	super(props)
+	this.state = {
+	    chartData: this.props.getHistory("light")
+	}
 	this.handleModalExitClick = this.handleModalExitClick.bind(this)
 	this.handleModalContentClick = this.handleModalContentClick.bind(this)
     }
@@ -27,11 +30,11 @@ class GraphLight extends Component {
 		<div className="modal" onClick={this.handleModalExitClick}>
 		<div className="modalContent" onClick={this.handleModalContentClick}>
 		
-		<ChartContainer timeRange={this.props.chartData.range()} title="Historical Light Level" titleStyle={{ fill: "#555", fontWeight: 500}}>
+		<ChartContainer timeRange={this.state.chartData.range()} title="Historical Light Level" titleStyle={{ fill: "#555", fontWeight: 500}}>
 		<ChartRow>
-		<YAxis id="light" label="Light Level" min={this.props.chartData.min("light")} max={this.props.chartData.max("light")}/>
+		<YAxis id="light" label="Light Level" min={this.state.chartData.min("light")} max={this.state.chartData.max("light")}/>
 		<Charts>
-		<LineChart axis="light" series={this.props.chartData} columns={["light"]}/>
+		<LineChart axis="light" series={this.state.chartData} columns={["light"]}/>
 		</Charts>
 		</ChartRow>
 		</ChartContainer>

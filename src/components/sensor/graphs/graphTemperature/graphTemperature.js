@@ -6,6 +6,9 @@ import './graphTemperature.css'
 class GraphTemperature extends Component {
     constructor(props){
 	super(props)
+	this.state = {
+	    chartData: this.props.getHistory("temperature")
+	}
 	this.handleModalExitClick = this.handleModalExitClick.bind(this)
 	this.handleModalContentClick = this.handleModalContentClick.bind(this)
     }
@@ -27,11 +30,11 @@ class GraphTemperature extends Component {
 		<div className="modal" onClick={this.handleModalExitClick}>
 		<div className="modalContent" onClick={this.handleModalContentClick}>
 		
-		<ChartContainer timeRange={this.props.chartData.timerange()} title="Historical Temperature Level" titleStyle={{ fill: "#555", fontWeight: 500 }}>
+		<ChartContainer timeRange={this.state.chartData.timerange()} title="Historical Temperature Level" titleStyle={{ fill: "#555", fontWeight: 500 }}>
 		<ChartRow>
-		<YAxis id="temperature" label="Temperature, C" min={this.props.chartData.min("temperature")} max={this.props.chartData.max("temperature")} format=".2f"/>
+		<YAxis id="temperature" label="Temperature, C" min={this.state.chartData.min("temperature")} max={this.state.chartData.max("temperature")} format=".2f"/>
 		<Charts>
-		<LineChart axis="temperature" series={this.props.chartData} columns={["temperature"]} />
+		<LineChart axis="temperature" series={this.state.chartData} columns={["temperature"]} />
 		</Charts>
 		</ChartRow>
 		</ChartContainer>

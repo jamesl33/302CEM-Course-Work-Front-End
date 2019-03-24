@@ -34,17 +34,15 @@ class Sensor extends Component {
     displayModal(){
 	if(this.state.modal){
 	    if(this.props.type === 'Light'){
-		let chartData = this.props.getHistory("light")
 		return(
 			<div>
-			<GraphLight onModalExitClick={this.onModalExitClick} chartData={chartData}/>
+			<GraphLight onModalExitClick={this.onModalExitClick} getHistory={this.props.getHistory}/>
 			</div>
 		)
 	    } else {
-		let chartData = this.props.getHistory("temperature")
 		return(
 			<div>
-			<GraphTemperature onModalExitClick={this.onModalExitClick} chartData={chartData}/>
+			<GraphTemperature onModalExitClick={this.onModalExitClick} getHistory={this.props.getHistory}/>
 			</div>
 		)
 	    }

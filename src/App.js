@@ -142,6 +142,7 @@ class App extends Component {
         })
     }
     getHistory(type){
+	console.log("in getHistory")
 	if(type === "light"){
 	    let chartData = new TimeSeries({
 	    name: "Historical Light",
