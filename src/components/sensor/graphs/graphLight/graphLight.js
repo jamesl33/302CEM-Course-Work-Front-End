@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Charts, ChartContainer, ChartRow, YAxis, LineChart } from 'react-timeseries-charts'
+import { TimeSeries } from 'pondjs'
 import '../modal.css'
 import './graphLight.css'
 
@@ -7,7 +8,11 @@ class GraphLight extends Component {
     constructor(props){
 	super(props)
 	this.state = {
-	    chartData: this.props.getHistory("light")
+	    chartData: new TimeSeries({
+                name: "Historical Light",
+                columns: ["time", "light"],
+                points: [[new Date(), 0]]
+	    })
 	}
 	this.handleModalExitClick = this.handleModalExitClick.bind(this)
 	this.handleModalContentClick = this.handleModalContentClick.bind(this)
@@ -29,7 +34,7 @@ class GraphLight extends Component {
 	return (
 		<div className="modal" onClick={this.handleModalExitClick}>
 		<div className="modalContent" onClick={this.handleModalContentClick}>
-		
+
 		<ChartContainer timeRange={this.state.chartData.range()} title="Historical Light Level" titleStyle={{ fill: "#555", fontWeight: 500}}>
 		<ChartRow>
 		<YAxis id="light" label="Light Level" min={this.state.chartData.min("light")} max={this.state.chartData.max("light")}/>
@@ -38,10 +43,23 @@ class GraphLight extends Component {
 		</Charts>
 		</ChartRow>
 		</ChartContainer>
-		
+
 		</div>
 		</div>
 	)
+    }
+    componentDidMount() {
+        this.props.getHistory('light', (err, history) => {
+            if (!err) {
+                this.setState({
+                    chartData: new TimeSeries({
+                        name: "Historical Light",
+                        columns: ["time", "light"],
+                        points: history
+                    })
+                })
+            }
+        })
     }
 }
 

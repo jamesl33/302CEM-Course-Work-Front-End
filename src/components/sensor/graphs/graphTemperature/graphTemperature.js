@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Charts, ChartContainer, ChartRow, YAxis, LineChart } from 'react-timeseries-charts'
+import { TimeSeries } from 'pondjs'
 import '../modal.css'
 import './graphTemperature.css'
 
@@ -7,7 +8,11 @@ class GraphTemperature extends Component {
     constructor(props){
 	super(props)
 	this.state = {
-	    chartData: this.props.getHistory("temperature")
+	    chartData: new TimeSeries({
+                name: "Historical Temperatures",
+                columns: ["time", "temperature"],
+                points: [[new Date(), 0]]
+	    })
 	}
 	this.handleModalExitClick = this.handleModalExitClick.bind(this)
 	this.handleModalContentClick = this.handleModalContentClick.bind(this)
@@ -29,7 +34,7 @@ class GraphTemperature extends Component {
 	return (
 		<div className="modal" onClick={this.handleModalExitClick}>
 		<div className="modalContent" onClick={this.handleModalContentClick}>
-		
+
 		<ChartContainer timeRange={this.state.chartData.timerange()} title="Historical Temperature Level" titleStyle={{ fill: "#555", fontWeight: 500 }}>
 		<ChartRow>
 		<YAxis id="temperature" label="Temperature, C" min={this.state.chartData.min("temperature")} max={this.state.chartData.max("temperature")} format=".2f"/>
@@ -38,10 +43,23 @@ class GraphTemperature extends Component {
 		</Charts>
 		</ChartRow>
 		</ChartContainer>
-	    
+
 		</div>
 		</div>
 	)
+    }
+    componentDidMount() {
+        this.props.getHistory('temperature', (err, history) => {
+            if (err) {
+                this.setState({
+                    chartData: new TimeSeries({
+                        name: "Historical Temperatures",
+                        columns: ["time", "temperature"],
+                        points: history
+                    })
+                })
+            }
+        })
     }
 }
 

@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { ToastContainer, toast } from 'react-toastify'
-import { TimeSeries } from 'pondjs'
 import 'react-toastify/dist/ReactToastify.css'
 import './App.css'
 import Sensor from './components/sensor/sensor'
@@ -141,31 +140,26 @@ class App extends Component {
             }
         })
     }
-    getHistory(type){
-	console.log("in getHistory")
-	if(type === "light"){
-	    let chartData = new TimeSeries({
-	    name: "Historical Light",
-	    columns: ["time", "light"],
-	    points: [[new Date(2019, 3, 21), 20000],
-		     [new Date(2019, 3, 22), 19000],
-		     [new Date(2019, 3, 23), 18000],
-		     [new Date(2019, 3, 24), 17000]
-		    ]
-	    })
-	    return(chartData)
-	} else {
-	    let chartData = new TimeSeries({
-	    name: "Historical Temperatures",
-	    columns: ["time", "temperature"],
-	    points: [[new Date(2019, 3, 20), 20.1],
-		     [new Date(2019, 3, 21), 22.5],
-		     [new Date(2019, 3, 22), 24.6],
-		     [new Date(2019, 3, 23), 28.0]
-		    ]
-	    })
-	    return(chartData)
-	}
+    /**
+     * @description Get the historical sensor data from the api
+     * @param {String} type - The type of a sensor in the api
+     * @param {Function} callback - Callback with the signature (err, history)
+     */
+    async getHistory(type, callback) {
+        try {
+            callback(null, await fetch(`${ip}/api/sensors/history/byType?type=${type}`, {
+                method: 'get'
+            }).then(response => {
+                if (response.ok) {
+                    return response.json()
+                }
+		throw new Error(`Network response was not ok, status code: ${response.status}`)
+            }).then(json => {
+                return json
+            }))
+        } catch (err) {
+            callback(err)
+        }
     }
     /**
      * @description Get the current light threshold value from the api
@@ -188,7 +182,7 @@ class App extends Component {
             callback(err)
         }
     }
-    
+
     /**
      * @description Set a new light threshold value using the api
      * @param {Integer} threshold - The new threshold value
@@ -234,7 +228,7 @@ class App extends Component {
             callback(err)
         }
     }
-    
+
     /**
      * @description Set a new min temp threshold value using the api
      * @param {Integer} threshold - The new threshold value
@@ -280,7 +274,7 @@ class App extends Component {
             callback(err)
         }
     }
-    
+
     /**
      * @description Set a new max temp threshold value using the api
      * @param {Integer} threshold - The new threshold value
