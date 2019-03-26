@@ -47,6 +47,7 @@ class App extends Component {
 	this.decrementMinTempThreshold = this.decrementMinTempThreshold.bind(this)
 	this.incrementMaxTempThreshold = this.incrementMaxTempThreshold.bind(this)
 	this.decrementMaxTempThreshold = this.decrementMaxTempThreshold.bind(this)
+	this.getHistory = this.getHistory.bind(this)
         this.getLightThreshold = this.getLightThreshold.bind(this)
         this.setLightThreshold = this.setLightThreshold.bind(this)
 	this.getMinTempThreshold = this.getMinTempThreshold.bind(this)
@@ -140,6 +141,27 @@ class App extends Component {
         })
     }
     /**
+     * @description Get the historical sensor data from the api
+     * @param {String} type - The type of a sensor in the api
+     * @param {Function} callback - Callback with the signature (err, history)
+     */
+    async getHistory(type, callback) {
+        try {
+            callback(null, await fetch(`${ip}/api/sensors/history/byType?type=${type}`, {
+                method: 'get'
+            }).then(response => {
+                if (response.ok) {
+                    return response.json()
+                }
+		throw new Error(`Network response was not ok, status code: ${response.status}`)
+            }).then(json => {
+                return json
+            }))
+        } catch (err) {
+            callback(err)
+        }
+    }
+    /**
      * @description Get the current light threshold value from the api
      * @param {Function} callback - Callback with the signature (err, threshold)
      */
@@ -160,7 +182,7 @@ class App extends Component {
             callback(err)
         }
     }
-    
+
     /**
      * @description Set a new light threshold value using the api
      * @param {Integer} threshold - The new threshold value
@@ -206,7 +228,7 @@ class App extends Component {
             callback(err)
         }
     }
-    
+
     /**
      * @description Set a new min temp threshold value using the api
      * @param {Integer} threshold - The new threshold value
@@ -252,7 +274,7 @@ class App extends Component {
             callback(err)
         }
     }
-    
+
     /**
      * @description Set a new max temp threshold value using the api
      * @param {Integer} threshold - The new threshold value
@@ -282,8 +304,8 @@ class App extends Component {
 		<div className="App">
 		<ToastContainer position="top-center" />
 		<div className="sensorArray">
-		<Sensor type="Light" threshold={this.state.light.threshold} incrementThreshold={this.incrementThreshold} decrementThreshold={this.decrementThreshold}>{this.state.light.value}</Sensor>
-		<Sensor type="Temperature" minTempThreshold={this.state.temperature.minThreshold} maxTempThreshold={this.state.temperature.maxThreshold} incrementMinTempThreshold={this.incrementMinTempThreshold} decrementMinTempThreshold={this.decrementMinTempThreshold} incrementMaxTempThreshold={this.incrementMaxTempThreshold} decrementMaxTempThreshold={this.decrementMaxTempThreshold}>{this.state.temperature.value}</Sensor>
+		<Sensor type="Light" threshold={this.state.light.threshold} incrementThreshold={this.incrementThreshold} decrementThreshold={this.decrementThreshold} getHistory={this.getHistory}>{this.state.light.value}</Sensor>
+		<Sensor type="Temperature" minTempThreshold={this.state.temperature.minThreshold} maxTempThreshold={this.state.temperature.maxThreshold} incrementMinTempThreshold={this.incrementMinTempThreshold} decrementMinTempThreshold={this.decrementMinTempThreshold} incrementMaxTempThreshold={this.incrementMaxTempThreshold} decrementMaxTempThreshold={this.decrementMaxTempThreshold} getHistory={this.getHistory}>{this.state.temperature.value}</Sensor>
 		</div>
 		</div>
 	)
