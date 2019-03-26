@@ -25,12 +25,13 @@ class GraphTemperature extends Component {
 	return null
     }
     render(){
-	const style = {
-	    temperature: {
-		stroke: "#A02C2C",
-		opacity: 0.2
-	    }
-	}
+        // Style was not being used, commented to get rid of warnings
+	// const style = {
+	//     temperature: {
+	// 	stroke: "#A02C2C",
+	// 	opacity: 0.2
+	//     }
+	// }
 	return (
 		<div className="modal" onClick={this.handleModalExitClick}>
 		<div className="modalContent" onClick={this.handleModalContentClick}>

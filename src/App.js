@@ -64,7 +64,6 @@ class App extends Component {
         this.setLightThreshold(newJSON.threshold, (err) => {
             if (err) {
                 toast.error(err.message)
-		console.log(err.messsage)
             } else {
                 this.setState({light: newJSON})
             }
@@ -147,16 +146,17 @@ class App extends Component {
      */
     async getHistory(type, callback) {
         try {
-            callback(null, await fetch(`${ip}/api/sensors/history/byType?type=${type}`, {
+            const response = await fetch(`${ip}/api/sensors/history/byType?type=${type}`, {
                 method: 'get'
-            }).then(response => {
-                if (response.ok) {
-                    return response.json()
-                }
-		throw new Error(`Network response was not ok, status code: ${response.status}`)
-            }).then(json => {
-                return json
-            }))
+            })
+
+            const json = await response.json()
+
+            if (!response.ok) {
+                throw new Error(`Error: ${json.error}`)
+            }
+
+            callback(null, json)
         } catch (err) {
             callback(err)
         }
@@ -167,17 +167,17 @@ class App extends Component {
      */
     async getLightThreshold(callback) {
         try {
-            callback(null, await fetch(`${ip}/api/sensors/light/threshold?id=0`, {
+            const response = await fetch(`${ip}/api/sensors/light/threshold?id=0`, {
                 method: 'get'
-            }).then(response => {
-		if(response.ok){
-		    console.log(response)
-                    return response.json()
-		}
-		throw new Error(`Network response was not ok, status code: ${response.status}`)
-            }).then(json => {
-                return json.threshold
-            }))
+            })
+
+            const json = await response.json()
+
+            if (!response.ok) {
+                throw new Error(`Error: ${json.error}`)
+            }
+
+            callback(null, json.threshold)
         } catch (err) {
             callback(err)
         }
@@ -190,18 +190,20 @@ class App extends Component {
      */
     async setLightThreshold(threshold, callback) {
         try {
-            await fetch(`${ip}/api/sensors/light/threshold`, {
+            const response = await fetch(`${ip}/api/sensors/light/threshold`, {
                 body: JSON.stringify({
                     id: 0,
                     threshold: threshold
                 }),
                 headers: {'content-type': 'application/json'},
                 method: 'post'
-            }).then(response => {
-		if(!response.ok){
-		    throw new Error(`Network response was not ok, status code: ${response.status}`)
-		}
 	    })
+
+            if (!response.ok) {
+                const json = await response.json()
+                throw new Error(`Error: ${json.error}`)
+            }
+
             callback(null)
         } catch (err) {
             callback(err)
@@ -213,17 +215,17 @@ class App extends Component {
      */
     async getMinTempThreshold(callback) {
         try {
-            callback(null, await fetch(`${ip}/api/sensors/temperature/threshold/min?id=1`, {
+            const response = await fetch(`${ip}/api/sensors/temperature/threshold/min?id=1`, {
                 method: 'get'
-            }).then(response => {
-		if(response.ok){
-		    console.log(response)
-                    return response.json()
-		}
-		throw new Error(`Network response was not ok, status code: ${response.status}`)
-            }).then(json => {
-                return json.threshold
-            }))
+            })
+
+            const json = await response.json()
+
+            if (!response.ok) {
+                throw new Error(`Error: ${json.error}`)
+            }
+
+            callback(null, json.threshold)
         } catch (err) {
             callback(err)
         }
@@ -236,22 +238,23 @@ class App extends Component {
      */
     async setMinTempThreshold(threshold, callback) {
         try {
-            await fetch(`${ip}/api/sensors/temperature/threshold/min`, {
+            const response = await fetch(`${ip}/api/sensors/temperature/threshold/min`, {
                 body: JSON.stringify({
-                    id: 0,
+                    id: 1,
                     threshold: threshold
                 }),
                 headers: {'content-type': 'application/json'},
                 method: 'post'
-            }).then(response => {
-		if(!response.ok){
-		    throw new Error(`Network response was not ok, status code: ${response.status}`)
-		}
 	    })
+
+            if (!response.ok) {
+                const json = await response.json()
+                throw new Error(`Error: ${json.error}`)
+            }
+
             callback(null)
-        } catch (err) {
-	    console.log(err)
-            callback(err)
+        } catch (error) {
+            callback(error)
         }
     }
     /**
@@ -260,16 +263,17 @@ class App extends Component {
      */
     async getMaxTempThreshold(callback) {
         try {
-            callback(null, await fetch(`${ip}/api/sensors/temperature/threshold/max?id=1`, {
+            const response = await fetch(`${ip}/api/sensors/temperature/threshold/max?id=1`, {
                 method: 'get'
-            }).then(response => {
-		if(response.ok){
-                    return response.json()
-		}
-		throw new Error(`Network response was not ok, status code: ${response.status}`)
-            }).then(json => {
-                return json.threshold
-            }))
+            })
+
+            const json = await response.json()
+
+            if (!response.ok) {
+                throw new Error(`Error: ${json.error}`)
+            }
+
+            callback(null, json.threshold)
         } catch (err) {
             callback(err)
         }
@@ -282,18 +286,20 @@ class App extends Component {
      */
     async setMaxTempThreshold(threshold, callback) {
         try {
-            await fetch(`${ip}/api/sensors/temperature/threshold/max`, {
+            const response = await fetch(`${ip}/api/sensors/temperature/threshold/max`, {
                 body: JSON.stringify({
                     id: 1,
                     threshold: threshold
                 }),
                 headers: {'content-type': 'application/json'},
                 method: 'post'
-            }).then(response => {
-		if(!response.ok){
-		    throw new Error(`Network response was not ok, status code: ${response.status}`)
-		}
 	    })
+
+            if (!response.ok) {
+                const json = await response.json()
+                throw new Error(`Error: ${json.error}`)
+            }
+
             callback(null)
         } catch (err) {
             callback(err)
@@ -316,7 +322,6 @@ class App extends Component {
 	    if(err){
 		toast.error(err.message)
 	    } else {
-		console.log(threshold)
 		let newJSON = this.state.light
 		newJSON.threshold = threshold
 		this.setState({light: newJSON})
@@ -326,7 +331,6 @@ class App extends Component {
 	    if(err){
 		toast.error(err.message)
 	    } else {
-		console.log(threshold)
 		let newJSON = this.state.temperature
 		newJSON.minThreshold = threshold
 		this.setState({temperature: newJSON})
@@ -336,7 +340,6 @@ class App extends Component {
 	    if(err){
 		toast.error(err.message)
 	    } else {
-		console.log(threshold)
 		let newJSON = this.state.temperature
 		newJSON.maxThreshold = threshold
 		this.setState({temperature: newJSON})
