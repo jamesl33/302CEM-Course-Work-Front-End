@@ -13,7 +13,6 @@ class ValueDisplay extends Component {
     shortener(){
 	if(this.props.children.toString().length > 4){
 	    let newNumber = this.props.children / 1000
-	    console.log(newNumber)
 	    newNumber = newNumber.toString().split('.',1)
 	    return `${newNumber}k`
 	} else {
