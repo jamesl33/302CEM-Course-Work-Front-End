@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Charts, ChartContainer, ChartRow, YAxis, LineChart } from 'react-timeseries-charts'
 import { TimeSeries } from 'pondjs'
+import { toast } from 'react-toastify'
 import '../modal.css'
 import './graphTemperature.css'
 
@@ -12,7 +13,8 @@ class GraphTemperature extends Component {
                 name: "Historical Temperatures",
                 columns: ["time", "temperature"],
                 points: [[new Date(), 0]]
-	    })
+	    }),
+	    failed: false
 	}
 	this.handleModalExitClick = this.handleModalExitClick.bind(this)
 	this.handleModalContentClick = this.handleModalContentClick.bind(this)
@@ -32,26 +34,36 @@ class GraphTemperature extends Component {
 	// 	opacity: 0.2
 	//     }
 	// }
-	return (
-		<div className="modal" onClick={this.handleModalExitClick}>
-		<div className="modalContent" onClick={this.handleModalContentClick}>
-
-		<ChartContainer timeRange={this.state.chartData.timerange()} title="Historical Temperature Level" titleStyle={{ fill: "#555", fontWeight: 500 }}>
-		<ChartRow>
-		<YAxis id="temperature" label="Temperature, C" min={this.state.chartData.min("temperature")} max={this.state.chartData.max("temperature")} format=".2f"/>
-		<Charts>
-		<LineChart axis="temperature" series={this.state.chartData} columns={["temperature"]} />
-		</Charts>
-		</ChartRow>
-		</ChartContainer>
-
-		</div>
-		</div>
-	)
+	if(!this.state.failed){
+	    return (
+		    <div className="modal" onClick={this.handleModalExitClick}>
+		    <div className="modalContent" onClick={this.handleModalContentClick}>
+		    
+		    <ChartContainer timeRange={this.state.chartData.timerange()} title="Historical Temperature Level" titleStyle={{ fill: "#555", fontWeight: 500 }}>
+		    <ChartRow>
+		    <YAxis id="temperature" label="Temperature, C" min={this.state.chartData.min("temperature")} max={this.state.chartData.max("temperature")} format=".2f"/>
+		    <Charts>
+		    <LineChart axis="temperature" series={this.state.chartData} columns={["temperature"]} />
+		    </Charts>
+		    </ChartRow>
+		    </ChartContainer>
+		    
+		    </div>
+		    </div>
+	    )
+	} else {
+	    return (
+		    <div className="modal" onClick={this.handleModalExitClick}>
+		    <div className="modalContent" onClick={this.handleModalContentClick}>
+		    <h2 className="modalText">Could not load graph, try again later</h2>
+		    </div>
+		    </div>
+	    )
+	}
     }
     componentDidMount() {
         this.props.getHistory('temperature', (err, history) => {
-            if (err) {
+            if (!err) {
                 this.setState({
                     chartData: new TimeSeries({
                         name: "Historical Temperatures",
@@ -59,7 +71,10 @@ class GraphTemperature extends Component {
                         points: history
                     })
                 })
-            }
+            } else {
+		toast.error(err.message)
+		this.setState({failed: true})
+	    }
         })
     }
 }

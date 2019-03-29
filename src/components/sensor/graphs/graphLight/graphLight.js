@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Charts, ChartContainer, ChartRow, YAxis, LineChart } from 'react-timeseries-charts'
 import { TimeSeries } from 'pondjs'
+import { toast } from 'react-toastify'
 import '../modal.css'
 import './graphLight.css'
 
@@ -12,7 +13,8 @@ class GraphLight extends Component {
                 name: "Historical Light",
                 columns: ["time", "light"],
                 points: [[new Date(), 0]]
-	    })
+	    }),
+	    failed: false
 	}
 	this.handleModalExitClick = this.handleModalExitClick.bind(this)
 	this.handleModalContentClick = this.handleModalContentClick.bind(this)
@@ -32,22 +34,32 @@ class GraphLight extends Component {
 	// 	opacity: 0.2
 	//     }
 	// }
-	return (
-		<div className="modal" onClick={this.handleModalExitClick}>
-		<div className="modalContent" onClick={this.handleModalContentClick}>
-
-		<ChartContainer timeRange={this.state.chartData.range()} title="Historical Light Level" titleStyle={{ fill: "#555", fontWeight: 500}}>
-		<ChartRow>
-		<YAxis id="light" label="Light Level" min={this.state.chartData.min("light")} max={this.state.chartData.max("light")}/>
-		<Charts>
-		<LineChart axis="light" series={this.state.chartData} columns={["light"]}/>
-		</Charts>
-		</ChartRow>
-		</ChartContainer>
-
-		</div>
-		</div>
-	)
+	if(!this.state.failed){
+	    return (
+		    <div className="modal" onClick={this.handleModalExitClick}>
+		    <div className="modalContent" onClick={this.handleModalContentClick}>
+		    
+		    <ChartContainer timeRange={this.state.chartData.range()} title="Historical Light Level" titleStyle={{ fill: "#555", fontWeight: 500}}>
+		    <ChartRow>
+		    <YAxis id="light" label="Light Level" min={this.state.chartData.min("light")} max={this.state.chartData.max("light")}/>
+		    <Charts>
+		    <LineChart axis="light" series={this.state.chartData} columns={["light"]}/>
+		    </Charts>
+		    </ChartRow>
+		    </ChartContainer>
+		    
+		    </div>
+		    </div>
+	    )
+	} else {
+	    return (
+		    <div className="modal" onClick={this.handleModalExitClick}>
+		    <div className="modalContent" onClick={this.handleModalContentClick}>
+		    <h2 className="modalText">Could not load graph, try again later</h2>
+		    </div>
+		    </div>
+	    )
+	}
     }
     componentDidMount() {
         this.props.getHistory('light', (err, history) => {
@@ -59,7 +71,10 @@ class GraphLight extends Component {
                         points: history
                     })
                 })
-            }
+            } else {
+		toast.error(err.message)
+		this.setState({failed: true})
+	    }
         })
     }
 }
