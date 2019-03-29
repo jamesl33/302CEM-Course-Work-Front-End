@@ -21,10 +21,10 @@ class Button extends Component{
      * @description Function for determining what CSS classes to use for the button
      */
     handleCSS(){
-	if(this.props.children === '+'){
-	    return 'green'
-	} else if(this.props.children === '-'){
+	if(this.props.children === '-'){
 	    return 'red'
+	} else {
+	    return 'green'
 	}
     }
     render(){

@@ -4,6 +4,7 @@ import Light from './types/light/light'
 import GraphLight from './graphs/graphLight/graphLight'
 import GraphTemperature from './graphs/graphTemperature/graphTemperature'
 import Temperature from './types/temperature/temperature'
+import Button from '../button/button'
 
 /** Class for creating the actual sensor box with Heading and 'Content', where content is determined by a separate class (e.g. Light) */
 class Sensor extends Component {
@@ -15,12 +16,13 @@ class Sensor extends Component {
          */
 	this.state = {
 	    css: "",
-	    modal: true,
+	    modal: false,
 	}
 	this.setCSS = this.setCSS.bind(this)
 	this.displayModal = this.displayModal.bind(this)
 	this.typeOfSensor = this.typeOfSensor.bind(this)
 	this.onModalExitClick = this.onModalExitClick.bind(this)
+	this.modalOn = this.modalOn.bind(this)
     }
     /**
      * @description Function for setting the CSS state from a child Content class
@@ -52,6 +54,9 @@ class Sensor extends Component {
     onModalExitClick(){
 	this.setState({modal: false})
     }
+    modalOn(){
+	this.setState({modal: true})
+    }
     /**
      * @description Function for determining the type of sensor to use based on props given to it. You MUST pass setCSS to the child somehow, otherwhise CSS will bork out
      */
@@ -77,6 +82,9 @@ class Sensor extends Component {
 		{this.displayModal()}
 		<h2 className={`header ${this.state.css}`}>{this.props.type}</h2>
 		{this.typeOfSensor()}
+		<div className={'button-menu'}>
+		<Button clickMethod={this.modalOn} disabled={false}>Show Historical Data</Button>
+		</div>
 		</div>
 	)
     }

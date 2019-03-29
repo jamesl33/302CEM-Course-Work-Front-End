@@ -69,5 +69,12 @@ h2.good {
     color: #282828;
 }
 
+.button-menu {
+    display: flex;
+    width: 66%;
+    margin: auto;
+    padding-bottom: 1em;
+}
+
 
 
