@@ -38,7 +38,7 @@ class GraphLight extends Component {
 	    return (
 		    <div className="modal" onClick={this.handleModalExitClick}>
 		    <div className="modalContent" onClick={this.handleModalContentClick}>
-		    
+
 		    <ChartContainer timeRange={this.state.chartData.range()} title="Historical Light Level" titleStyle={{ fill: "#555", fontWeight: 500}}>
 		    <ChartRow>
 		    <YAxis id="light" label="Light Level" min={this.state.chartData.min("light")} max={this.state.chartData.max("light")}/>
@@ -47,7 +47,7 @@ class GraphLight extends Component {
 		    </Charts>
 		    </ChartRow>
 		    </ChartContainer>
-		    
+
 		    </div>
 		    </div>
 	    )
@@ -63,18 +63,20 @@ class GraphLight extends Component {
     }
     componentDidMount() {
         this.props.getHistory('light', (err, history) => {
-            if (!err) {
+            if (err) {
+                toast.error(err.message)
+                this.setState({failed: true})
+            } else {
                 this.setState({
                     chartData: new TimeSeries({
                         name: "Historical Light",
                         columns: ["time", "light"],
-                        points: history
+                        points: history.map(item => {
+                            return [new Date(item.timestamp), item.value]
+                        })
                     })
                 })
-            } else {
-		toast.error(err.message)
-		this.setState({failed: true})
-	    }
+            }
         })
     }
 }

@@ -38,7 +38,7 @@ class GraphTemperature extends Component {
 	    return (
 		    <div className="modal" onClick={this.handleModalExitClick}>
 		    <div className="modalContent" onClick={this.handleModalContentClick}>
-		    
+
 		    <ChartContainer timeRange={this.state.chartData.timerange()} title="Historical Temperature Level" titleStyle={{ fill: "#555", fontWeight: 500 }}>
 		    <ChartRow>
 		    <YAxis id="temperature" label="Temperature, C" min={this.state.chartData.min("temperature")} max={this.state.chartData.max("temperature")} format=".2f"/>
@@ -47,7 +47,7 @@ class GraphTemperature extends Component {
 		    </Charts>
 		    </ChartRow>
 		    </ChartContainer>
-		    
+
 		    </div>
 		    </div>
 	    )
@@ -63,18 +63,20 @@ class GraphTemperature extends Component {
     }
     componentDidMount() {
         this.props.getHistory('temperature', (err, history) => {
-            if (!err) {
+            if (err) {
+                toast.error(err.message)
+                this.setState({failed: true})
+            } else {
                 this.setState({
                     chartData: new TimeSeries({
-                        name: "Historical Temperatures",
+                        name: "Historical Temperature",
                         columns: ["time", "temperature"],
-                        points: history
+                        points: history.map(item => {
+                            return [new Date(item.timestamp), item.value]
+                        })
                     })
                 })
-            } else {
-		toast.error(err.message)
-		this.setState({failed: true})
-	    }
+            }
         })
     }
 }
