@@ -28,12 +28,12 @@ class App extends Component {
 	/* Tunnel functionality. Handle MQTT data in here */
         this.state.socket.on('tunnel', data => {
 	    let jsonData = JSON.parse(data)
-	    if(jsonData.topic === '302CEM/bear/sensor_0/light_1'){
+	    if(jsonData.topic === '302CEM/bear/sensor_light/sensor_0'){
 		let newJSON = this.state.light
 		newJSON.value = jsonData.message
 		this.setState({light: newJSON})
 	    }
-	    if(jsonData.topic === '302CEM/bear/sensor_0/temperature_0'){
+	    if(jsonData.topic === '302CEM/bear/sensor_temperature/sensor_1'){
 		let newJSON = this.state.temperature
 		newJSON.value = jsonData.message
 		this.setState({temperature: newJSON})
