@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/pages/leej64/Bear-302CEM-Course-Work-Front-End/precache-manifest.4035de6ca2c14bd2d76cdd110dfb2a56.js"
+  "/pages/leej64/Bear-302CEM-Course-Work-Front-End/precache-manifest.558df6ed334ede6062a489c58a0ab4c9.js"
 );
 
 workbox.clientsClaim();
