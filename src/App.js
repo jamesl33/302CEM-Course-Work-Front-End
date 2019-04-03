@@ -20,8 +20,8 @@ class App extends Component {
             },
 	    temperature: {
 		value: 20.00,
-		minThreshold: 16.00,
-		maxThreshold: 24.00
+		minThreshold: 25.00,
+		maxThreshold: 27.00
 	    }
         }
 
