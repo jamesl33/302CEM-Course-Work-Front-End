@@ -16,7 +16,7 @@ class App extends Component {
             socket: openSocket(ip),
             light: {
                 value: 0,
-                threshold: 10000,
+                threshold: 24,
             },
 	    temperature: {
 		value: 20.00,
@@ -60,7 +60,7 @@ class App extends Component {
          * @description Increment the current light threshold by 1000
          */
 	let newJSON = this.state.light
-	newJSON.threshold = newJSON.threshold + 1000
+	newJSON.threshold = newJSON.threshold + 2
         this.setLightThreshold(newJSON.threshold, (err) => {
             if (err) {
                 toast.error(err.message)
@@ -74,7 +74,7 @@ class App extends Component {
          * @description Decrement the current light threshold by 1000
          */
 	let newJSON = this.state.light
-	newJSON.threshold = newJSON.threshold - 1000
+	newJSON.threshold = newJSON.threshold - 2
         this.setLightThreshold(newJSON.threshold, (err) => {
             if (err) {
                 toast.error(err.message)
@@ -153,6 +153,7 @@ class App extends Component {
             const json = await response.json()
 
             if (!response.ok) {
+		console.log('wtf')
                 throw new Error(`Error: ${json.error}`)
             }
 
