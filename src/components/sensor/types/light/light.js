@@ -26,7 +26,7 @@ class Light extends Component {
      * @description Function for determining what CSS class to use
      */
     determineCSS(){
-	if(this.props.children < 24){
+	if(this.props.children < 200){
 	    return 'dark'
 	} else {
 	    return 'light'
